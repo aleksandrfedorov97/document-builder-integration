@@ -13,11 +13,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.6'
-          bundler: none 
       - name: Install Bundler
         run: sudo gem install bundler -v 1.17.3
       - name: Bundle Install
