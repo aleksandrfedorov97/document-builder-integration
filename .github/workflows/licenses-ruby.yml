@@ -1,0 +1,36 @@
+name: Licenses Ruby
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  licences:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.6'
+          bundler: none 
+      - name: Install Bundler
+        run: sudo gem install bundler -v 1.17.3
+      - name: Bundle Install
+        run: sudo bundle _1.17.3_ install
+        working-directory: ./web/ruby
+      - name: Get Repository License
+        id: license
+        run: |
+          license="${{ (github.event.repository.license.spdx_id) || (github.event.repository.licenses[0]) }}"
+          echo "License detected: $license"
+          echo "license=$license" >> $GITHUB_OUTPUT
+      - name: Check Licenses
+        uses: ONLYOFFICE/check-licenses@v1
+        with:
+          project_license: ${{ steps.license.outputs.license }}
+          working_directory: ./web/ruby
